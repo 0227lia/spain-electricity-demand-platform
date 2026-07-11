@@ -1,0 +1,110 @@
+{
+  "extraction": {
+    "retrieved_at_utc": "2026-07-11T05:07:07.585745+00:00",
+    "source_name": "Red Electrica de Espana REData API",
+    "source_documentation": "https://www.ree.es/en/datos/apidata",
+    "date_range": {
+      "start": "2019-01-01",
+      "end": "2025-12-31"
+    },
+    "request_count": 7,
+    "records": 2557,
+    "raw_file": "ree_demand_daily.json",
+    "raw_file_sha256": "d0ca4f9fb32cfbe2f149916a436983d8d4a43bd7480179c22035366dd347179d",
+    "requests": [
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2019-01-01T00%3A00&end_date=2019-12-31T23%3A59&time_trunc=day",
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "records": 365
+      },
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2020-01-01T00%3A00&end_date=2020-12-31T23%3A59&time_trunc=day",
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "records": 366
+      },
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2021-01-01T00%3A00&end_date=2021-12-31T23%3A59&time_trunc=day",
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "records": 365
+      },
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2022-01-01T00%3A00&end_date=2022-12-31T23%3A59&time_trunc=day",
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "records": 365
+      },
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2023-01-01T00%3A00&end_date=2023-12-31T23%3A59&time_trunc=day",
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "records": 365
+      },
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2024-01-01T00%3A00&end_date=2024-12-31T23%3A59&time_trunc=day",
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "records": 366
+      },
+      {
+        "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2025-01-01T00%3A00&end_date=2025-12-31T23%3A59&time_trunc=day",
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "records": 365
+      }
+    ]
+  },
+  "data_quality": {
+    "row_count": 2557,
+    "date_min": "2019-01-01",
+    "date_max": "2025-12-31",
+    "missing_days": 0,
+    "duplicate_dates": 0,
+    "demand_min_mwh": 403297.49,
+    "demand_max_mwh": 875118.684
+  },
+  "warehouse_quality": {
+    "fact_rows": 2557,
+    "duplicate_dates": 0
+  },
+  "sql_reports": {
+    "monthly_demand": 84,
+    "weekday_profile": 7,
+    "annual_demand": 7,
+    "peak_days": 20
+  },
+  "forecast": {
+    "forecast_mode": "One-step-ahead daily forecast using only lags ending before the target date.",
+    "test_period": {
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "rows": 365
+    },
+    "model_selection": {
+      "criterion": "Lowest mean MAE across 2024 rolling backtests",
+      "selected_model": "hist_gradient_boosting"
+    },
+    "backtest_summary": [
+      {
+        "model": "hist_gradient_boosting",
+        "mae_mwh": 14306.15663304357,
+        "rmse_mwh": 18982.944427469727,
+        "smape_pct": 2.127835484767632
+      },
+      {
+        "model": "seasonal_naive_7d",
+        "mae_mwh": 32012.07073214286,
+        "rmse_mwh": 41840.192641990114,
+        "smape_pct": 4.641353872969161
+      }
+    ],
+    "selected_test_metrics": {
+      "model": "hist_gradient_boosting",
+      "mae_mwh": 15471.157763127758,
+      "rmse_mwh": 23035.990808526283,
+      "smape_pct": 2.2591587697775717
+    }
+  }
+}

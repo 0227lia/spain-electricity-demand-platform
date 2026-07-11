@@ -1,0 +1,32 @@
+{
+  "forecast_mode": "One-step-ahead daily forecast using only lags ending before the target date.",
+  "test_period": {
+    "start": "2025-01-01",
+    "end": "2025-12-31",
+    "rows": 365
+  },
+  "model_selection": {
+    "criterion": "Lowest mean MAE across 2024 rolling backtests",
+    "selected_model": "hist_gradient_boosting"
+  },
+  "backtest_summary": [
+    {
+      "model": "hist_gradient_boosting",
+      "mae_mwh": 14306.15663304357,
+      "rmse_mwh": 18982.944427469727,
+      "smape_pct": 2.127835484767632
+    },
+    {
+      "model": "seasonal_naive_7d",
+      "mae_mwh": 32012.07073214286,
+      "rmse_mwh": 41840.192641990114,
+      "smape_pct": 4.641353872969161
+    }
+  ],
+  "selected_test_metrics": {
+    "model": "hist_gradient_boosting",
+    "mae_mwh": 15471.157763127758,
+    "rmse_mwh": 23035.990808526283,
+    "smape_pct": 2.2591587697775717
+  }
+}

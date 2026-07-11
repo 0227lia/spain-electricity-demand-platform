@@ -1,0 +1,57 @@
+{
+  "retrieved_at_utc": "2026-07-11T05:07:07.585745+00:00",
+  "source_name": "Red Electrica de Espana REData API",
+  "source_documentation": "https://www.ree.es/en/datos/apidata",
+  "date_range": {
+    "start": "2019-01-01",
+    "end": "2025-12-31"
+  },
+  "request_count": 7,
+  "records": 2557,
+  "raw_file": "ree_demand_daily.json",
+  "raw_file_sha256": "d0ca4f9fb32cfbe2f149916a436983d8d4a43bd7480179c22035366dd347179d",
+  "requests": [
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2019-01-01T00%3A00&end_date=2019-12-31T23%3A59&time_trunc=day",
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "records": 365
+    },
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2020-01-01T00%3A00&end_date=2020-12-31T23%3A59&time_trunc=day",
+      "start_date": "2020-01-01",
+      "end_date": "2020-12-31",
+      "records": 366
+    },
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2021-01-01T00%3A00&end_date=2021-12-31T23%3A59&time_trunc=day",
+      "start_date": "2021-01-01",
+      "end_date": "2021-12-31",
+      "records": 365
+    },
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2022-01-01T00%3A00&end_date=2022-12-31T23%3A59&time_trunc=day",
+      "start_date": "2022-01-01",
+      "end_date": "2022-12-31",
+      "records": 365
+    },
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2023-01-01T00%3A00&end_date=2023-12-31T23%3A59&time_trunc=day",
+      "start_date": "2023-01-01",
+      "end_date": "2023-12-31",
+      "records": 365
+    },
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2024-01-01T00%3A00&end_date=2024-12-31T23%3A59&time_trunc=day",
+      "start_date": "2024-01-01",
+      "end_date": "2024-12-31",
+      "records": 366
+    },
+    {
+      "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2025-01-01T00%3A00&end_date=2025-12-31T23%3A59&time_trunc=day",
+      "start_date": "2025-01-01",
+      "end_date": "2025-12-31",
+      "records": 365
+    }
+  ]
+}
