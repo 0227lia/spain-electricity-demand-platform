@@ -1,6 +1,6 @@
 {
   "extraction": {
-    "retrieved_at_utc": "2026-07-11T05:07:07.585745+00:00",
+    "retrieved_at_utc": "2026-07-12T23:15:40.349730+00:00",
     "source_name": "Red Electrica de Espana REData API",
     "source_documentation": "https://www.ree.es/en/datos/apidata",
     "date_range": {
@@ -10,7 +10,7 @@
     "request_count": 7,
     "records": 2557,
     "raw_file": "ree_demand_daily.json",
-    "raw_file_sha256": "d0ca4f9fb32cfbe2f149916a436983d8d4a43bd7480179c22035366dd347179d",
+    "raw_file_sha256": "21e4e0f7efc658b22058428295c8477cf0728b1cd997300a4bb37db7746a9cdc",
     "requests": [
       {
         "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2019-01-01T00%3A00&end_date=2019-12-31T23%3A59&time_trunc=day",
@@ -56,6 +56,47 @@
       }
     ]
   },
+  "weather_extraction": {
+    "retrieved_at_utc": "2026-07-12T23:15:40.418348+00:00",
+    "source_name": "Open-Meteo Historical Weather API (ERA5)",
+    "source_documentation": "https://open-meteo.com/en/docs/historical-weather-api",
+    "model": "ERA5",
+    "date_range": {
+      "start": "2019-01-01",
+      "end": "2025-12-31"
+    },
+    "city_count": 5,
+    "records": 12785,
+    "raw_file": "open_meteo_weather.json",
+    "raw_file_sha256": "08c2b37b66250c09b20dfd16d13d90adf603daa7ab2e5357f357b25503c3adf8",
+    "requests": [
+      {
+        "city": "madrid",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=40.4168&longitude=-3.7038&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+        "records": 2557
+      },
+      {
+        "city": "barcelona",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=41.3874&longitude=2.1686&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+        "records": 2557
+      },
+      {
+        "city": "valencia",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=39.4699&longitude=-0.3763&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+        "records": 2557
+      },
+      {
+        "city": "sevilla",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=37.3891&longitude=-5.9845&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+        "records": 2557
+      },
+      {
+        "city": "bilbao",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=43.263&longitude=-2.935&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+        "records": 2557
+      }
+    ]
+  },
   "data_quality": {
     "row_count": 2557,
     "date_min": "2019-01-01",
@@ -65,46 +106,96 @@
     "demand_min_mwh": 403297.49,
     "demand_max_mwh": 875118.684
   },
+  "weather_quality": {
+    "city_rows": 12785,
+    "national_rows": 2557,
+    "city_count": 5,
+    "date_min": "2019-01-01",
+    "date_max": "2025-12-31",
+    "missing_days": 0,
+    "aggregation": "equal_weight"
+  },
   "warehouse_quality": {
     "fact_rows": 2557,
-    "duplicate_dates": 0
+    "duplicate_dates": 0,
+    "weather_city_rows": 12785,
+    "weather_proxy_rows": 2557
   },
   "sql_reports": {
     "monthly_demand": 84,
     "weekday_profile": 7,
     "annual_demand": 7,
-    "peak_days": 20
+    "peak_days": 20,
+    "monthly_weather": 84,
+    "temperature_demand_profile": 4,
+    "calendar_demand_profile": 3,
+    "degree_day_sensitivity": 13
   },
   "forecast": {
-    "forecast_mode": "One-step-ahead daily forecast using only lags ending before the target date.",
+    "forecast_mode": "One-step-ahead daily forecast using lags ending before the target date.",
+    "weather_assumption": "The weather-informed candidate uses realized ERA5 weather as a proxy for a target-day weather forecast.",
+    "runtime": {
+      "python": "3.13.14",
+      "scikit_learn": "1.7.2",
+      "joblib": "1.5.2",
+      "numpy": "2.3.3",
+      "pandas": "2.3.2"
+    },
     "test_period": {
       "start": "2025-01-01",
       "end": "2025-12-31",
       "rows": 365
     },
     "model_selection": {
-      "criterion": "Lowest mean MAE across 2024 rolling backtests",
-      "selected_model": "hist_gradient_boosting"
+      "criterion": "Lowest mean MAE across 12 expanding-window backtests in 2024",
+      "selected_model": "hgb_weather_informed",
+      "calibration_residuals": 336,
+      "bias_correction_mwh": 1549.4185883279424
     },
-    "backtest_summary": [
+    "selected_test_metrics": {
+      "model": "hgb_weather_informed",
+      "mae_mwh": 12545.945570526701,
+      "rmse_mwh": 19244.803879498242,
+      "smape_pct": 1.8180942001660851,
+      "wape_pct": 1.7869852387096434,
+      "bias_mwh": -2644.0693248990156,
+      "mase_7d": 0.38230830143742095
+    },
+    "prediction_intervals": [
       {
-        "model": "hist_gradient_boosting",
-        "mae_mwh": 14306.15663304357,
-        "rmse_mwh": 18982.944427469727,
-        "smape_pct": 2.127835484767632
+        "interval": "p80",
+        "target_coverage": 0.8,
+        "observed_coverage": 0.7205479452054795,
+        "radius_mwh": 15495.96095363237,
+        "mean_width_mwh": 30991.92190726474
       },
       {
-        "model": "seasonal_naive_7d",
-        "mae_mwh": 32012.07073214286,
-        "rmse_mwh": 41840.192641990114,
-        "smape_pct": 4.641353872969161
+        "interval": "p95",
+        "target_coverage": 0.95,
+        "observed_coverage": 0.9397260273972603,
+        "radius_mwh": 29270.477424974088,
+        "mean_width_mwh": 58540.954849948175
       }
     ],
-    "selected_test_metrics": {
-      "model": "hist_gradient_boosting",
-      "mae_mwh": 15471.157763127758,
-      "rmse_mwh": 23035.990808526283,
-      "smape_pct": 2.2591587697775717
-    }
+    "statistical_comparison_vs_seasonal_naive_7d": {
+      "diebold_mariano": {
+        "mean_absolute_error_advantage_mwh": 20270.358766459594,
+        "dm_statistic": 8.972444442684553,
+        "two_sided_p_value": 2.900055834895525e-19,
+        "newey_west_max_lag": 7.0
+      },
+      "moving_block_bootstrap": {
+        "estimate_mwh": 20270.358766459594,
+        "ci_lower_95_mwh": 16043.72347256824,
+        "ci_upper_95_mwh": 24506.258660359574,
+        "iterations": 1000.0,
+        "block_length_days": 7.0
+      }
+    },
+    "limitations": [
+      "Realized ERA5 weather is not a historical target-day weather forecast and can overstate operational value.",
+      "Symmetric conformal intervals assume 2024 out-of-fold residuals are informative for 2025.",
+      "The task is one-step-ahead with observed lags, not a recursive long-horizon forecast."
+    ]
   }
 }

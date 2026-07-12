@@ -1,0 +1,41 @@
+{
+  "retrieved_at_utc": "2026-07-12T23:15:40.418348+00:00",
+  "source_name": "Open-Meteo Historical Weather API (ERA5)",
+  "source_documentation": "https://open-meteo.com/en/docs/historical-weather-api",
+  "model": "ERA5",
+  "date_range": {
+    "start": "2019-01-01",
+    "end": "2025-12-31"
+  },
+  "city_count": 5,
+  "records": 12785,
+  "raw_file": "open_meteo_weather.json",
+  "raw_file_sha256": "08c2b37b66250c09b20dfd16d13d90adf603daa7ab2e5357f357b25503c3adf8",
+  "requests": [
+    {
+      "city": "madrid",
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude=40.4168&longitude=-3.7038&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+      "records": 2557
+    },
+    {
+      "city": "barcelona",
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude=41.3874&longitude=2.1686&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+      "records": 2557
+    },
+    {
+      "city": "valencia",
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude=39.4699&longitude=-0.3763&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+      "records": 2557
+    },
+    {
+      "city": "sevilla",
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude=37.3891&longitude=-5.9845&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+      "records": 2557
+    },
+    {
+      "city": "bilbao",
+      "url": "https://archive-api.open-meteo.com/v1/archive?latitude=43.263&longitude=-2.935&start_date=2019-01-01&end_date=2025-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cwind_speed_10m_max%2Cshortwave_radiation_sum&timezone=Europe%2FMadrid&models=era5",
+      "records": 2557
+    }
+  ]
+}

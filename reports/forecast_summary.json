@@ -1,32 +1,67 @@
 {
-  "forecast_mode": "One-step-ahead daily forecast using only lags ending before the target date.",
+  "forecast_mode": "One-step-ahead daily forecast using lags ending before the target date.",
+  "weather_assumption": "The weather-informed candidate uses realized ERA5 weather as a proxy for a target-day weather forecast.",
+  "runtime": {
+    "python": "3.13.14",
+    "scikit_learn": "1.7.2",
+    "joblib": "1.5.2",
+    "numpy": "2.3.3",
+    "pandas": "2.3.2"
+  },
   "test_period": {
     "start": "2025-01-01",
     "end": "2025-12-31",
     "rows": 365
   },
   "model_selection": {
-    "criterion": "Lowest mean MAE across 2024 rolling backtests",
-    "selected_model": "hist_gradient_boosting"
+    "criterion": "Lowest mean MAE across 12 expanding-window backtests in 2024",
+    "selected_model": "hgb_weather_informed",
+    "calibration_residuals": 336,
+    "bias_correction_mwh": 1670.6100639433716
   },
-  "backtest_summary": [
+  "selected_test_metrics": {
+    "model": "hgb_weather_informed",
+    "mae_mwh": 12455.180070825156,
+    "rmse_mwh": 19159.70215586702,
+    "smape_pct": 1.80470882720539,
+    "wape_pct": 1.7740570295731553,
+    "bias_mwh": -2667.1063629979617,
+    "mase_7d": 0.3795424354590498
+  },
+  "prediction_intervals": [
     {
-      "model": "hist_gradient_boosting",
-      "mae_mwh": 14306.15663304357,
-      "rmse_mwh": 18982.944427469727,
-      "smape_pct": 2.127835484767632
+      "interval": "p80",
+      "target_coverage": 0.8,
+      "observed_coverage": 0.7150684931506849,
+      "radius_mwh": 15428.584504741535,
+      "mean_width_mwh": 30857.16900948307
     },
     {
-      "model": "seasonal_naive_7d",
-      "mae_mwh": 32012.07073214286,
-      "rmse_mwh": 41840.192641990114,
-      "smape_pct": 4.641353872969161
+      "interval": "p95",
+      "target_coverage": 0.95,
+      "observed_coverage": 0.9424657534246575,
+      "radius_mwh": 29534.8296646644,
+      "mean_width_mwh": 59069.6593293288
     }
   ],
-  "selected_test_metrics": {
-    "model": "hist_gradient_boosting",
-    "mae_mwh": 15471.157763127758,
-    "rmse_mwh": 23035.990808526283,
-    "smape_pct": 2.2591587697775717
-  }
+  "statistical_comparison_vs_seasonal_naive_7d": {
+    "diebold_mariano": {
+      "mean_absolute_error_advantage_mwh": 20361.124266161136,
+      "dm_statistic": 9.044745798113103,
+      "two_sided_p_value": 1.5001379892762275e-19,
+      "newey_west_max_lag": 7.0
+    },
+    "moving_block_bootstrap": {
+      "estimate_mwh": 20361.124266161136,
+      "ci_lower_95_mwh": 16126.501027110386,
+      "ci_upper_95_mwh": 24552.76739313121,
+      "iterations": 1000.0,
+      "block_length_days": 7.0
+    }
+  },
+  "limitations": [
+    "Realized ERA5 weather is not a historical target-day weather forecast and can overstate operational value.",
+    "Symmetric conformal intervals assume 2024 out-of-fold residuals are informative for 2025.",
+    "The task is one-step-ahead with observed lags, not a recursive long-horizon forecast."
+  ]
 }

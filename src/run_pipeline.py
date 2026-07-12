@@ -9,6 +9,7 @@ from src.extract import run_extraction
 from src.forecast import run_forecast
 from src.load import build_warehouse
 from src.transform import run_transform
+from src.weather import run_weather_extraction, run_weather_transform
 
 
 def configure_logging() -> None:
@@ -28,13 +29,21 @@ def run_pipeline() -> dict[str, object]:
     logger = logging.getLogger(__name__)
     logger.info("Starting REE electricity-demand pipeline")
     extraction = run_extraction()
-    daily_demand, model_features, data_quality = run_transform()
-    warehouse_quality = build_warehouse(daily_demand)
+    weather_extraction = run_weather_extraction()
+    city_weather, national_weather, weather_quality = run_weather_transform()
+    daily_demand, model_features, data_quality = run_transform(national_weather=national_weather)
+    warehouse_quality = build_warehouse(
+        daily_demand,
+        city_weather=city_weather,
+        national_weather=national_weather,
+    )
     sql_reports = run_sql_analytics()
     forecast = run_forecast(model_features)
     summary = {
         "extraction": extraction,
+        "weather_extraction": weather_extraction,
         "data_quality": data_quality,
+        "weather_quality": weather_quality,
         "warehouse_quality": warehouse_quality,
         "sql_reports": sql_reports,
         "forecast": forecast,

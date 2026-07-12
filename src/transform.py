@@ -1,12 +1,42 @@
 from __future__ import annotations
 
 import json
+from datetime import timedelta
 from pathlib import Path
 
+import holidays
 import numpy as np
 import pandas as pd
 
 from src.config import DAILY_DEMAND_PATH, MODEL_FEATURES_PATH, RAW_DATA_PATH
+
+
+def add_spanish_calendar_features(frame: pd.DataFrame) -> pd.DataFrame:
+    """Add known-in-advance national holiday and bridge-day indicators."""
+    enriched = frame.copy()
+    enriched["date"] = pd.to_datetime(enriched["date"])
+    enriched["year"] = enriched["date"].dt.year
+    enriched["month"] = enriched["date"].dt.month
+    enriched["week"] = enriched["date"].dt.isocalendar().week.astype(int)
+    enriched["day_of_week"] = enriched["date"].dt.dayofweek
+    enriched["is_weekend"] = enriched["day_of_week"].isin([5, 6])
+    years = range(enriched["date"].dt.year.min(), enriched["date"].dt.year.max() + 1)
+    holiday_calendar = holidays.country_holidays("ES", years=years, observed=True)
+    dates = enriched["date"].dt.date
+    enriched["is_holiday"] = dates.map(lambda value: value in holiday_calendar)
+    enriched["is_day_before_holiday"] = dates.map(lambda value: value + timedelta(days=1) in holiday_calendar)
+    enriched["is_day_after_holiday"] = dates.map(lambda value: value - timedelta(days=1) in holiday_calendar)
+    previous_is_weekend = (enriched["date"] - pd.Timedelta(days=1)).dt.dayofweek.isin([5, 6])
+    next_is_weekend = (enriched["date"] + pd.Timedelta(days=1)).dt.dayofweek.isin([5, 6])
+    enriched["is_bridge_day"] = (
+        ~enriched["is_holiday"]
+        & ~enriched["is_weekend"]
+        & (
+            (enriched["is_day_before_holiday"] & previous_is_weekend)
+            | (enriched["is_day_after_holiday"] & next_is_weekend)
+        )
+    )
+    return enriched
 
 
 def parse_ree_value(value: object) -> float:
@@ -76,32 +106,53 @@ def transform_raw_values(values: list[dict[str, object]]) -> pd.DataFrame:
     demand["week"] = demand["date"].dt.isocalendar().week.astype(int)
     demand["day_of_week"] = demand["date"].dt.dayofweek
     demand["is_weekend"] = demand["day_of_week"].isin([5, 6])
+    demand = add_spanish_calendar_features(demand)
     demand.attrs["quality"] = quality
     return demand.reset_index(drop=True)
 
 
-def create_model_features(daily_demand: pd.DataFrame) -> pd.DataFrame:
-    """Create one-step-ahead features using only demand observed before the target day."""
+def create_model_features(
+    daily_demand: pd.DataFrame,
+    national_weather: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    """Create known-calendar, exogenous-weather, and past-demand forecast features."""
     features = daily_demand.copy().sort_values("date")
+    if "is_holiday" not in features:
+        features = add_spanish_calendar_features(features)
+    if national_weather is not None:
+        weather = national_weather.copy()
+        weather["date"] = pd.to_datetime(weather["date"])
+        features = features.merge(weather, on="date", how="left", validate="one_to_one")
+        weather_columns = [column for column in weather if column != "date"]
+        if features[weather_columns].isna().any().any():
+            raise ValueError("Weather proxy does not cover every demand date")
     day_of_year = features["date"].dt.dayofyear
     features["day_of_year_sin"] = np.sin(2 * np.pi * day_of_year / 365.25)
     features["day_of_year_cos"] = np.cos(2 * np.pi * day_of_year / 365.25)
-    for lag in [1, 7, 14, 28]:
+    week_of_year = features["date"].dt.isocalendar().week.astype(int)
+    features["week_of_year_sin"] = np.sin(2 * np.pi * week_of_year / 52.18)
+    features["week_of_year_cos"] = np.cos(2 * np.pi * week_of_year / 52.18)
+    for lag in [1, 7, 14, 28, 364]:
         features[f"lag_{lag}"] = features["demand_mwh"].shift(lag)
-    features["rolling_mean_7"] = features["demand_mwh"].shift(1).rolling(7).mean()
-    features["rolling_mean_28"] = features["demand_mwh"].shift(1).rolling(28).mean()
+    shifted_demand = features["demand_mwh"].shift(1)
+    for window in [7, 28, 56]:
+        features[f"rolling_mean_{window}"] = shifted_demand.rolling(window).mean()
+    for window in [7, 28]:
+        features[f"rolling_std_{window}"] = shifted_demand.rolling(window).std()
+    features["lag_1_minus_7"] = features["lag_1"] - features["lag_7"]
     return features.dropna().reset_index(drop=True)
 
 
 def run_transform(
     raw_path: Path = RAW_DATA_PATH,
+    national_weather: pd.DataFrame | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, int | float | str]]:
     """Read the raw snapshot, validate it, and create analytical/model-ready tables."""
     if not raw_path.exists():
         raise FileNotFoundError(f"Raw data not found at {raw_path}. Run `python -m src.extract` first.")
     raw_payload = json.loads(raw_path.read_text(encoding="utf-8"))
     daily_demand = transform_raw_values(raw_payload["values"])
-    model_features = create_model_features(daily_demand)
+    model_features = create_model_features(daily_demand, national_weather)
     quality = daily_demand.attrs["quality"]
     DAILY_DEMAND_PATH.parent.mkdir(parents=True, exist_ok=True)
     daily_demand.to_csv(DAILY_DEMAND_PATH, index=False)

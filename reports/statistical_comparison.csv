@@ -1,0 +1,3 @@
+method,mean_absolute_error_advantage_mwh,dm_statistic,two_sided_p_value,newey_west_max_lag,estimate_mwh,ci_lower_95_mwh,ci_upper_95_mwh,iterations,block_length_days
+Diebold-Mariano absolute loss,20361.124266161136,9.044745798113103,1.5001379892762275e-19,7.0,,,,,
+Moving-block bootstrap,,,,,20361.124266161136,16126.501027110386,24552.76739313121,1000.0,7.0
