@@ -24,12 +24,14 @@ def test_validation_rejects_missing_calendar_day() -> None:
 
 
 def test_model_features_use_only_past_values() -> None:
-    features = create_model_features(make_daily_frame(50))
+    features = create_model_features(make_daily_frame(400))
     first_row = features.iloc[0]
-    assert first_row["demand_mwh"] == 29
-    assert first_row["lag_1"] == 28
-    assert first_row["lag_7"] == 22
-    assert first_row["rolling_mean_7"] == pytest.approx(25.0)
+    assert first_row["demand_mwh"] == 365
+    assert first_row["lag_1"] == 364
+    assert first_row["lag_7"] == 358
+    assert first_row["lag_364"] == 1
+    assert first_row["rolling_mean_7"] == pytest.approx(361.0)
+    assert first_row["lag_1_minus_7"] == 6
 
 
 def test_transform_raw_values_normalizes_dates_and_values() -> None:
@@ -40,3 +42,4 @@ def test_transform_raw_values_normalizes_dates_and_values() -> None:
     frame = transform_raw_values(values)
     assert list(frame["demand_mwh"]) == [100.5, 101.5]
     assert list(frame["date"].dt.strftime("%Y-%m-%d")) == ["2024-01-01", "2024-01-02"]
+    assert {"is_holiday", "is_bridge_day", "is_day_before_holiday"}.issubset(frame.columns)

@@ -1,5 +1,5 @@
 {
-  "retrieved_at_utc": "2026-07-11T05:07:07.585745+00:00",
+  "retrieved_at_utc": "2026-07-12T23:15:40.349730+00:00",
   "source_name": "Red Electrica de Espana REData API",
   "source_documentation": "https://www.ree.es/en/datos/apidata",
   "date_range": {
@@ -9,7 +9,7 @@
   "request_count": 7,
   "records": 2557,
   "raw_file": "ree_demand_daily.json",
-  "raw_file_sha256": "d0ca4f9fb32cfbe2f149916a436983d8d4a43bd7480179c22035366dd347179d",
+  "raw_file_sha256": "21e4e0f7efc658b22058428295c8477cf0728b1cd997300a4bb37db7746a9cdc",
   "requests": [
     {
       "url": "https://apidatos.ree.es/es/datos/demanda/evolucion?start_date=2019-01-01T00%3A00&end_date=2019-12-31T23%3A59&time_trunc=day",
